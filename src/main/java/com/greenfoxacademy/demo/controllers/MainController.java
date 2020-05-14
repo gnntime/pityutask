@@ -21,7 +21,7 @@ public class MainController {
     this.humanService = humanService;
   }
 
-  @GetMapping("/list-humans")
+  @GetMapping({"/list-humans","/"})
   public String getHumans(Model model) {
     model.addAttribute("humans", humanService.getAllHumans());
     model.addAttribute("human", new Human());
@@ -53,8 +53,8 @@ public class MainController {
     return "edithuman";
   }
 
-  @PostMapping("/edit")
-  public String editHuman(@ModelAttribute Human human) {
+  @PostMapping("/edit/{id}")
+  public String postEditHuman(@ModelAttribute Human human) {
     humanService.modifyHuman(human);
     return "redirect:/list-humans";
   }
