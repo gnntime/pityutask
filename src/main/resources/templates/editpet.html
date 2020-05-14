@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Main Page</title>
+  <link rel="stylesheet" th:href="@{/style.css}" />
+  <meta charset="UTF-8">
+</head>
+<body>
+<h4> You can edit your Human Here </h4>
+<form th:action="'/edit/' + ${pet.id}" th:object="${pet}" method="post">
+  <label> Pet Name: </label>
+  <input type="text" th:field="${pet.name}">
+  <label> Pet Owner: </label>
+  <select th:field="${pet.owner}">
+    <option th:each="${human.name}"></option>
+  </select>
+  <input type="submit" value="Edit">
+</form>
+</body>
+</html>

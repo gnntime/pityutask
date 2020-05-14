@@ -1,10 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
+  <title>Main Page</title>
+  <link rel="stylesheet" th:href="@{/style.css}" />
   <meta charset="UTF-8">
-  <title>Title</title>
 </head>
 <body>
+<table>
+  <tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Owner</th>
+    <th>Functions</th>
+  </tr>
+  <tr th:each="pet:${pets}">
+    <td th:text="*{pet.id}"></td>
+    <td th:text="*{pet.name}"></td>
+    <td th:text="*{pet.owner.getName()}"></td>
+    <td><button><a th:href="|/delete/*{pet.id}|">delete</a></button>
+      <button><a th:href="|/edit/*{pet.id}|">edit</a></button></td>
+  </tr>
+</table>
+
+<form action="/add-pet" th:object="${pet}" method="post">
+  <p> Add new Pet: </p> <br>
+  <p th:if="${fail} == true" th:text="'Something went wrong, please check if the fields are filled out or use another name,' +
+    ' because the name is already taken'"></p>
+  <label> Pet Name:</label>
+  <input type="text" th:field="${pet.name}"> <br>
+  <label> Owner</label>
+  <select name="ownerid">
+    <option th:each="human:${humans}" th:text="${human.name}" th:value="${human.id}">
+  </select>
+  <input type="submit" value="Add">
+</form>
 
 </body>
 </html>

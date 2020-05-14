@@ -1,7 +1,9 @@
 package com.greenfoxacademy.demo.controllers;
 
 import com.greenfoxacademy.demo.modells.Human;
+import com.greenfoxacademy.demo.modells.Pet;
 import com.greenfoxacademy.demo.services.HumanService;
+import com.greenfoxacademy.demo.services.PetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,10 +18,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class MainController {
   private HumanService humanService;
+  private PetService petService;
 
   @Autowired
-  public MainController(HumanService humanService) {
+  public MainController(HumanService humanService, PetService petService) {
     this.humanService = humanService;
+    this.petService = petService;
   }
 
   @GetMapping({"/list-humans","/"})
@@ -70,4 +74,31 @@ public class MainController {
     humanService.modifyHuman(human);
     return "redirect:/list-humans";
   }
+
+  @GetMapping("/list-pets")
+  public String getPets(Model model,
+                        @RequestParam(required = false, value = "fail") boolean fail,
+                        @RequestParam(required = false, value = "name") String name) {
+    if (!fail) {
+      model.addAttribute("pet", new Pet());
+      model.addAttribute("pets", petService.getAllPets());
+      model.addAttribute("humans", humanService.getAllHumans());
+      return "pets";
+    }
+    model.addAttribute("pets", petService.getAllPets());
+    model.addAttribute("fail", true);
+    model.addAttribute("pet", petService.getPetByName(name));
+    model.addAttribute("humans", humanService.getAllHumans());
+    return "pets";
+  }
+
+  @PostMapping("/add-pet")
+  public String addPet(@ModelAttribute Pet pet, @RequestParam(value = "ownerid") Long humanId) {
+    if (pet.getName().equals("") || petService.doesPetByNameExists(pet.getName())) {
+      return "redirect:/list-pets?fail=true&name=" +pet.getName();
+    }
+    petService.createPet(pet, humanId);
+    return "redirect:/list-pets";
+  }
+
 }

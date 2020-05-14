@@ -1,6 +1,8 @@
 package com.greenfoxacademy.demo.modells;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -14,7 +16,8 @@ public class Pet {
   private Long id;
   private String name;
   @JoinColumn
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JsonIgnore
   private Human owner;
 
   public Pet() {
