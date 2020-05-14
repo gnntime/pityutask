@@ -24,6 +24,8 @@
 </table>
 <form action="/add-human" th:object="${human}" method="post">
     <p> Add new Human: </p> <br>
+    <p th:if="${fail} == true" th:text="'Something went wrong, please check if the fields are filled out or use another name,' +
+    ' because the name is already taken'"></p>
     <label> Human Name:</label>
     <input type="text" th:field="${human.name}"> <br>
     <label> Human Age</label>

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class MainController {
@@ -22,14 +23,25 @@ public class MainController {
   }
 
   @GetMapping({"/list-humans","/"})
-  public String getHumans(Model model) {
+  public String getHumans(Model model,
+                          @RequestParam(required = false, value = "fail") boolean fail,
+                          @RequestParam(required = false, value = "name") String name) {
+    if (!fail) {
+      model.addAttribute("human", new Human());
+      model.addAttribute("humans", humanService.getAllHumans());
+      return "index";
+    }
     model.addAttribute("humans", humanService.getAllHumans());
-    model.addAttribute("human", new Human());
+    model.addAttribute("fail", true);
+    model.addAttribute("human", humanService.getHumanByName(name));
     return "index";
   }
 
   @PostMapping("/add-human")
   public String addHuman(@ModelAttribute Human human) {
+    if (human.getName().equals("") || human.getAge() == 0 || humanService.doesHumanExistsByName(human.getName())) {
+      return "redirect:/list-humans?fail=true&name=" +human.getName();
+    }
     humanService.createHuman(human);
     return "redirect:/list-humans";
   }

@@ -3,6 +3,7 @@ package com.greenfoxacademy.demo.services;
 import com.greenfoxacademy.demo.modells.Human;
 import com.greenfoxacademy.demo.repositories.HumanRepository;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,5 +34,13 @@ public class HumanService {
 
   public Human getHumanById(Long id) {
     return humanRepository.findById(id).orElse(null);
+  }
+
+  public Optional<Human> getHumanByName(String name) {
+    return humanRepository.findByName(name);
+  }
+
+  public boolean doesHumanExistsByName(String name) {
+    return getHumanByName(name).isPresent();
   }
 }

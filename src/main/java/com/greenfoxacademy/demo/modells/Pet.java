@@ -1,28 +1,23 @@
 package com.greenfoxacademy.demo.modells;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.util.ArrayList;
-import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToOne;
 
 @Entity
-public class Human {
+public class Pet {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
   private String name;
-  @JsonIgnore
-  private int age;
   @JoinColumn
-  @OneToMany
-  private List<Pet> pets = new ArrayList<>();
+  @ManyToOne
+  private Human owner;
 
-  public Human() {
+  public Pet() {
   }
 
   public Long getId() {
@@ -41,11 +36,11 @@ public class Human {
     this.name = name;
   }
 
-  public int getAge() {
-    return age;
+  public Human getOwner() {
+    return owner;
   }
 
-  public void setAge(int age) {
-    this.age = age;
+  public void setOwner(Human owner) {
+    this.owner = owner;
   }
 }
